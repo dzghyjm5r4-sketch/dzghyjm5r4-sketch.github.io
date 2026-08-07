@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260">
+  <!-- Background blob -->
+  <ellipse cx="100" cy="210" rx="70" ry="24" fill="#F0EBE6" opacity="0.6"/>
+  <!-- Hair back -->
+  <path d="M50 75 Q42 115 52 150 Q60 178 85 186 Q100 190 115 186 Q140 178 148 150 Q158 115 150 75 Q142 42 115 32 Q100 28 85 32 Q58 42 50 75" fill="#2C2A28"/>
+  <!-- Body / dress -->
+  <path d="M60 185 Q55 210 58 240 L70 255 L130 255 L142 240 Q145 210 140 185 Q120 178 100 178 Q80 178 60 185" fill="#FDFBF9"/>
+  <path d="M85 178 L85 200 M115 178 L115 200" stroke="#EDE8E3" stroke-width="1.2"/>
+  <!-- Arms -->
+  <path d="M62 190 Q48 205 45 225" fill="none" stroke="#F5D0C5" stroke-width="10" stroke-linecap="round"/>
+  <path d="M138 190 Q152 205 155 225" fill="none" stroke="#F5D0C5" stroke-width="10" stroke-linecap="round"/>
+  <!-- Right hand waving -->
+  <circle cx="158" cy="228" r="7" fill="#F5D0C5"/>
+  <!-- Neck -->
+  <rect x="88" y="148" width="24" height="22" fill="#F5D0C5"/>
+  <!-- Face -->
+  <ellipse cx="100" cy="112" rx="36" ry="42" fill="#F5D0C5"/>
+  <!-- Hair front -->
+  <path d="M64 72 Q68 48 100 44 Q132 48 136 72 Q130 58 112 54 Q100 52 88 54 Q70 58 64 72" fill="#2C2A28"/>
+  <path d="M64 72 Q60 92 66 108" fill="none" stroke="#2C2A28" stroke-width="3" stroke-linecap="round"/>
+  <path d="M136 72 Q140 92 134 108" fill="none" stroke="#2C2A28" stroke-width="3" stroke-linecap="round"/>
+  <!-- Hair strands -->
+  <path d="M58 88 Q52 110 58 138" fill="none" stroke="#3E3B38" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M142 88 Q148 110 142 138" fill="none" stroke="#3E3B38" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M68 78 Q64 100 70 124" fill="none" stroke="#3E3B38" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M132 78 Q136 100 130 124" fill="none" stroke="#3E3B38" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Eyebrows -->
+  <path d="M78 100 Q84 96 92 100" fill="none" stroke="#5A4E47" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M108 100 Q116 96 122 100" fill="none" stroke="#5A4E47" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- Eyes -->
+  <circle cx="85" cy="108" r="3.5" fill="#3E3B38"/>
+  <circle cx="115" cy="108" r="3.5" fill="#3E3B38"/>
+  <circle cx="86.5" cy="106.5" r="1" fill="#FFF"/>
+  <circle cx="116.5" cy="106.5" r="1" fill="#FFF"/>
+  <!-- Smile -->
+  <path d="M88 126 Q100 134 112 126" fill="none" stroke="#C47A6A" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Blush -->
+  <ellipse cx="74" cy="120" rx="5" ry="3" fill="#E8A598" opacity="0.35"/>
+  <ellipse cx="126" cy="120" rx="5" ry="3" fill="#E8A598" opacity="0.35"/>
+  <!-- Little heart doodle -->
+  <path d="M152 68 Q156 62 160 68 Q164 62 168 68 Q164 78 160 80 Q156 78 152 68" fill="#E8A598" opacity="0.55"/>
+</svg>

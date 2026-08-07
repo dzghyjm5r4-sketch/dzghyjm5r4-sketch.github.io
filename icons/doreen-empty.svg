@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <circle cx="60" cy="95" rx="36" ry="10" fill="#F0EBE6" opacity="0.5"/>
+  <!-- Hair back -->
+  <path d="M35 38 Q30 58 36 74 Q42 86 56 88 Q64 89 72 88 Q86 86 90 74 Q96 58 92 38 Q88 24 72 20 Q60 18 48 20 Q32 24 35 38" fill="#2C2A28"/>
+  <!-- Body -->
+  <path d="M42 84 Q38 100 40 112 L58 116 L78 112 Q80 100 76 84 Q64 82 52 82 Q46 82 42 84" fill="#FDFBF9"/>
+  <!-- Face -->
+  <ellipse cx="60" cy="54" rx="22" ry="26" fill="#F5D0C5"/>
+  <!-- Hair front -->
+  <path d="M38 38 Q40 26 60 24 Q80 26 82 38 Q78 32 68 30 Q60 28 52 30 Q42 32 38 38" fill="#2C2A28"/>
+  <!-- Eyes -->
+  <circle cx="52" cy="54" r="2.5" fill="#3E3B38"/>
+  <circle cx="68" cy="54" r="2.5" fill="#3E3B38"/>
+  <!-- Smile -->
+  <path d="M54 64 Q60 68 66 64" fill="none" stroke="#C47A6A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Blush -->
+  <ellipse cx="46" cy="60" rx="3" ry="1.8" fill="#E8A598" opacity="0.35"/>
+  <ellipse cx="74" cy="60" rx="3" ry="1.8" fill="#E8A598" opacity="0.35"/>
+  <!-- Thought sparkles -->
+  <path d="M92 34 L94 40 L100 42 L94 44 L92 50 L90 44 L84 42 L90 40 Z" fill="#D4B896" opacity="0.7"/>
+  <circle cx="24" cy="42" r="2" fill="#8BA5B8" opacity="0.55"/>
+  <circle cx="30" cy="34" r="1.5" fill="#A3B5A0" opacity="0.55"/>
+</svg>

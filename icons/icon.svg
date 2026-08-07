@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#F7F2EE"/>
+  <!-- Hand-drawn D letter -->
+  <path d="M156 130 Q156 118 168 118 L232 118 Q290 118 326 160 Q362 202 362 256 Q362 310 326 352 Q290 394 232 394 L168 394 Q156 394 156 382 Z" fill="none" stroke="#5A4E47" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M188 154 L188 358" fill="none" stroke="#5A4E47" stroke-width="24" stroke-linecap="round"/>
+  <path d="M232 142 Q272 142 296 172 Q320 202 320 256 Q320 310 296 340 Q272 370 232 370 L188 370" fill="none" stroke="#5A4E47" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Coral accent dot -->
+  <circle cx="380" cy="388" r="22" fill="#E8A598" opacity="0.85"/>
+  <!-- Soft pencil ring -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#E8DDD6" stroke-width="4" stroke-dasharray="12 8" opacity="0.6"/>
+</svg>
