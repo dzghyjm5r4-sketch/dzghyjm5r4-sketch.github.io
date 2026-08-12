@@ -325,10 +325,6 @@ body {
 .hero-greeting { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-top: 2px; }
 .hero-status { font-size: 13px; color: var(--text-secondary); margin-top: 3px; line-height: 1.45; }
 .hero-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-.hero-progress-ring { position: relative; width: 46px; height: 46px; }
-.hero-progress-ring svg { transform: rotate(-90deg); }
-.hero-progress-ring .ring-bg { stroke: var(--border-card); }
-.hero-progress-ring .ring-fg { stroke: var(--c-personal); stroke-linecap: round; transition: stroke-dashoffset 0.6s; }
 .hero-progress-text {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 700; color: var(--text-primary);
@@ -562,6 +558,7 @@ body {
 .project-tile-name { font-size: 15px; font-weight: 700; }
 .project-tile-progress { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 .project-tile-count { font-size: 11px; color: var(--text-tertiary); margin-top: 8px; }
+.project-tile-summary { color: var(--text-secondary); line-height: 1.5; }
 .project-tile-bar { height: 4px; border-radius: 2px; margin-top: 8px; }
 
 /* Project Detail */

@@ -1,6 +1,6 @@
 /* ===== Doreen's Personal OS — Service Worker ===== */
 
-const CACHE_NAME = 'doreen-os-v8';
+const CACHE_NAME = 'doreen-os-v11';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',

@@ -1,5 +1,16 @@
 /* ===== Doreen's Personal OS — app.js ===== */
 
+/* Local calendar date (YYYY-MM-DD) in the USER's timezone.
+   Used everywhere a date is derived or compared, so pre-entered schedules
+   always match their real day (toISOString() is UTC and lags local time). */
+function localDate(d) {
+  d = d || new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 /* ===== Domain Config ===== */
 const DOMAINS = {
   schedule: { name: '日程', color: '#E8A598', bg: '#FBF0ED', soft: '#F5DAD3', icon: '📅' },
@@ -201,7 +212,7 @@ const DB = {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `personal-os-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.download = `personal-os-backup-${localDate()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   },
@@ -223,7 +234,7 @@ const DB = {
   getTodayTasks() { return this.data.tasks.filter(t => t.inToday && t.status !== 'completed' && t.status !== 'cancelled'); },
   getTop3() { return this.data.tasks.filter(t => t.inTop3).sort((a,b) => a.top3Order - b.top3Order); },
   getTodayTop3() {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDate();
     return this.data.tasks
       .filter(t => t.inTop3 && (t.inToday || (t.dueDate && t.dueDate === today)) && t.status !== 'completed' && t.status !== 'cancelled')
       .sort((a,b) => (a.top3Order||0) - (b.top3Order||0));
@@ -231,7 +242,7 @@ const DB = {
   getInbox() { return this.data.inspirations.filter(i => !i.processed); },
   getReminders() { return this.data.reminders; },
   getTodaySchedules() {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDate();
     return this.data.schedules.filter(s => s.date === today).sort((a,b) => a.start.localeCompare(b.start));
   },
 
@@ -268,14 +279,14 @@ const UI = {
   },
 
   updateStreak() {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDate();
     const p = DB.data.profile;
     if (p.lastActiveDate === today) {
       // 今天已记录过，无需重复累加
     } else if (!p.lastActiveDate) {
       p.streak = 1;
     } else {
-      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+      const yesterday = localDate(new Date(Date.now() - 86400000));
       if (p.lastActiveDate === yesterday) p.streak = (p.streak || 0) + 1;
       else p.streak = 1;
     }
@@ -546,7 +557,7 @@ const UI = {
             <div class="form-field"><label>领域</label><select id="fm-domain">${domainOptions}</select></div>
             <div class="form-field"><label>重复</label><select id="fm-repeat">${repeatOptions}</select></div>
           </div>
-          <div class="form-field"><label>日期</label><input type="date" id="fm-date" value="${data.date && data.date !== 'today' ? data.date : new Date().toISOString().slice(0,10)}"></div>
+          <div class="form-field"><label>日期</label><input type="date" id="fm-date" value="${data.date && data.date !== 'today' ? data.date : localDate()}"></div>
           <div class="form-row">
             <div class="form-field"><label>开始时间</label><input type="time" id="fm-start" value="${data.start||'09:00'}"></div>
             <div class="form-field"><label>结束时间</label><input type="time" id="fm-end" value="${data.end||'10:00'}"></div>
@@ -578,7 +589,7 @@ const UI = {
           <div class="form-field"><label>运动项目</label><input type="text" id="fm-type" value="${this.escape(data.type||'')}" placeholder="如：跑步、瑜伽"></div>
           <div class="form-row">
             <div class="form-field"><label>时长（分钟）</label><input type="number" id="fm-duration" value="${data.duration||30}"></div>
-            <div class="form-field"><label>日期</label><input type="date" id="fm-date" value="${data.date||new Date().toISOString().slice(0,10)}"></div>
+            <div class="form-field"><label>日期</label><input type="date" id="fm-date" value="${data.date||localDate()}"></div>
           </div>
           <div class="form-field"><label>心情/图标</label><input type="text" id="fm-mood" value="${this.escape(data.mood||'🏃')}" placeholder="emoji"></div>
           <div class="form-field"><label>运动摘要</label><textarea id="fm-summary" placeholder="记录今天的运动感受">${this.escape(data.summary||'')}</textarea></div>
@@ -717,7 +728,7 @@ const UI = {
       this.saveSchedule({
         title: text,
         domain,
-        date: new Date().toISOString().slice(0, 10),
+        date: localDate(),
         start: '09:00',
         end: '10:00',
         repeat: 'none',
@@ -748,15 +759,8 @@ const UI = {
     const greet = hour < 6 ? '夜深了' : hour < 11 ? '早上好' : hour < 14 ? '中午好' : hour < 18 ? '下午好' : '晚上好';
     const days = ['日','一','二','三','四','五','六'];
     const dateStr = `${now.getMonth()+1}月${now.getDate()}日 星期${days[now.getDay()]}`;
-    const todayStr = now.toISOString().slice(0, 10);
+    const todayStr = localDate(now);
     const checkedIn = DB.data.profile.lastActiveDate === todayStr;
-
-    const todayTasks = DB.getTodayTasks();
-    const completed = todayTasks.filter(t => t.status === 'completed').length;
-    const todayTotal = todayTasks.length;
-    const todayProgress = todayTotal > 0 ? Math.round(completed / todayTotal * 100) : 0;
-    const circ = 2 * Math.PI * 18;
-    const dashOffset = circ * (1 - todayProgress / 100);
 
     p.innerHTML = `
       <!-- 1. Hero -->
@@ -770,14 +774,6 @@ const UI = {
           <div class="hero-status">${DB.data.profile.status}</div>
         </div>
         <div class="hero-stats">
-          <div class="hero-progress-ring">
-            <svg width="44" height="44" viewBox="0 0 44 44">
-              <circle class="ring-bg" cx="22" cy="22" r="18" fill="none" stroke-width="3.5"/>
-              <circle class="ring-fg" cx="22" cy="22" r="18" fill="none" stroke-width="3.5"
-                stroke-dasharray="${circ}" stroke-dashoffset="${dashOffset}"/>
-            </svg>
-            <div class="hero-progress-text">${todayProgress}%</div>
-          </div>
           <div class="hero-streak ${checkedIn ? 'is-checked' : ''}">
             <span class="hero-streak-flame">🔥</span>
             <span class="hero-streak-num">连续 ${DB.data.profile.streak} 天</span>
@@ -872,7 +868,7 @@ const UI = {
 
   openAIAnalysis() {
     const data = DB.data;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDate();
     const days = ['日','一','二','三','四','五','六'];
     const todayTasks = DB.getTodayTasks();
     const completedTasks = todayTasks.filter(t => t.status === 'completed');
@@ -900,7 +896,7 @@ const UI = {
       const progress = DB.getDomainProgress(key);
       const pending = DB.getDomainPending(key);
       if (key === 'period') return `🌙 生理期：当前周期第 ${data.period.currentDay} 天，预测下次 ${data.period.nextPredict}。`;
-      if (key === 'exercise') return `🏃 运动：累计 ${exercises.length} 次，本周 ${exercises.filter(e => e.date >= new Date(Date.now()-6*86400000).toISOString().slice(0,10)).length} 次。`;
+      if (key === 'exercise') return `🏃 运动：累计 ${exercises.length} 次，本周 ${exercises.filter(e => e.date >= localDate(new Date(Date.now()-6*86400000))).length} 次。`;
       if (key === 'reading') return `📚 阅读：在读 ${books.length} 本，整体进度 ${progress}%。`;
       if (key === 'learning') return `✏️ 学习：进行中 ${learning.length} 个主题，整体进度 ${progress}%。`;
       return `${d.icon} ${d.name}：${progress}% 完成，${pending} 项待办。`;
@@ -1027,7 +1023,7 @@ const UI = {
             </div>
           `;
         }).join('')}
-        <div class="timeline-empty" onclick="UI.openFormModal('schedule', {date:new Date().toISOString().slice(0,10), start:'09:00', end:'10:00', repeat:'none', domain:'schedule'}, UI.saveSchedule)">+ 点击新增安排</div>
+        <div class="timeline-empty" onclick="UI.openFormModal('schedule', {date:localDate(), start:'09:00', end:'10:00', repeat:'none', domain:'schedule'}, UI.saveSchedule)">+ 点击新增安排</div>
       </div>
     `;
   },
@@ -1070,7 +1066,7 @@ const UI = {
         summaryLine = `距下次约 ${daysToNext} 天 · 周期共 ${cycleLen} 天`;
       } else if (key === 'exercise') {
         const ex = DB.data.exercises || [];
-        const weekStart = new Date(Date.now() - 6 * 86400000).toISOString().slice(0, 10);
+        const weekStart = localDate(new Date(Date.now() - 6 * 86400000));
         const weekCount = ex.filter(e => e.date >= weekStart).length;
         const weekMin = ex.filter(e => e.date >= weekStart).reduce((s, e) => s + (e.duration || 0), 0);
         summaryLine = ex.length ? `本周 ${weekCount} 次 · 共 ${weekMin} 分钟 · 累计 ${ex.length} 次` : '记录今日运动，开启本周节奏';
@@ -1174,6 +1170,7 @@ const UI = {
           const progress = DB.getDomainProgress(key);
           const pending = DB.getDomainPending(key);
           let extraInfo = '';
+          let summaryLine = '';
           if (key === 'reading') {
             const reading = DB.data.books.filter(b => b.status === 'reading').length;
             const done = DB.data.books.filter(b => b.status === 'completed').length;
@@ -1183,21 +1180,31 @@ const UI = {
             const done = DB.data.learningTopics.filter(l => l.status === 'completed').length;
             extraInfo = `在学 ${inProg} · 已完成 ${done}`;
           } else if (key === 'period') {
+            const cycleLen = DB.data.period.cycleLength || 28;
+            const daysToNext = Math.max(0, cycleLen - DB.data.period.currentDay);
             extraInfo = `周期第 ${DB.data.period.currentDay} 天`;
+            summaryLine = `距下次约 ${daysToNext} 天 · 周期共 ${cycleLen} 天`;
           } else if (key === 'exercise') {
             const exercises = DB.data.exercises || [];
             const totalMin = exercises.reduce((s, e) => s + e.duration, 0);
             extraInfo = `本周 ${exercises.length} 次 · ${totalMin} 分钟`;
+            const weekStart = localDate(new Date(Date.now() - 6 * 86400000));
+            const weekCount = exercises.filter(e => e.date >= weekStart).length;
+            const weekMin = exercises.filter(e => e.date >= weekStart).reduce((s, e) => s + (e.duration || 0), 0);
+            summaryLine = exercises.length ? `本周 ${weekCount} 次 · 共 ${weekMin} 分钟 · 累计 ${exercises.length} 次` : '记录今日运动，开启本周节奏';
           } else {
             extraInfo = `${pending} 项待办`;
           }
+          const isSummaryCard = (key === 'period' || key === 'exercise');
           return `
             <div class="project-tile" onclick="UI.openProject('${key}')" style="background:${d.bg}">
               <div class="project-tile-icon" style="background:rgba(255,255,255,0.85);box-shadow:0 1px 3px rgba(44,42,40,0.05)">${d.icon}</div>
               <div class="project-tile-name">${d.name}</div>
+              ${isSummaryCard ? `
+              <div class="project-tile-count project-tile-summary">${summaryLine}</div>` : `
               <div class="project-tile-progress">${progress}% 完成</div>
               <div class="project-tile-count">${extraInfo}</div>
-              <div class="project-tile-bar" style="background:rgba(255,255,255,0.6)"><div style="height:100%;width:${progress}%;background:${d.color};border-radius:2px"></div></div>
+              <div class="project-tile-bar" style="background:rgba(255,255,255,0.6)"><div style="height:100%;width:${progress}%;background:${d.color};border-radius:2px"></div></div>`}
             </div>
           `;
         }).join('')}
@@ -1385,7 +1392,7 @@ const UI = {
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().slice(0, 10);
+      const dateStr = localDate(d);
       const dayEx = exercises.filter(e => e.date === dateStr);
       const dayMin = dayEx.reduce((s, e) => s + e.duration, 0);
       if (dayMin > maxMin) maxMin = dayMin;
@@ -1421,7 +1428,7 @@ const UI = {
         <div class="text-xs text-tertiary" style="text-align:center">最近 7 天运动时长分布</div>
       </div>
 
-      <button class="btn-primary" style="margin-bottom:12px" onclick="UI.openFormModal('exercise', {date:'${new Date().toISOString().slice(0,10)}', mood:'🏃'}, UI.saveExercise)">+ 记录运动</button>
+      <button class="btn-primary" style="margin-bottom:12px" onclick="UI.openFormModal('exercise', {date:'${localDate()}', mood:'🏃'}, UI.saveExercise)">+ 记录运动</button>
       <div class="card">
         <div class="card-header"><span class="card-title">🏃 运动记录 (${exercises.length})</span></div>
         ${exercises.length === 0
@@ -1530,7 +1537,7 @@ const UI = {
     if (!el) return;
     const now = new Date();
     const days = ['日','一','二','三','四','五','六'];
-    const todayStr = now.toISOString().slice(0, 10);
+    const todayStr = localDate(now);
     const schedules = DB.getTodaySchedules();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -1596,9 +1603,9 @@ const UI = {
         ${hours.map(h => `
           <div class="week-time">${h}:00</div>
           ${weekDays.map(d => {
-            const dateStr = new Date(new Date().setDate(new Date().getDate() - todayIdx + d.day)).toISOString().slice(0,10);
+            const dateStr = localDate(new Date(new Date().setDate(new Date().getDate() - todayIdx + d.day)));
             const events = allSchedules.filter(s => {
-              const sDate = s.date === 'today' ? new Date().toISOString().slice(0,10) : s.date;
+              const sDate = s.date === 'today' ? localDate() : s.date;
               const [sh] = s.start.split(':').map(Number);
               return sh === h && sDate === dateStr;
             });
@@ -1811,7 +1818,10 @@ const UI = {
     const exerciseGoal = 180;
     const exerciseValue = Math.min(100, Math.round(s.exerciseMinutes / exerciseGoal * 100));
 
-    const travelValue = 0;
+    const booksTotal = DB.data.books.length;
+    const booksDone = DB.data.books.filter(b => b.status === 'completed').length;
+    const booksReading = DB.data.books.filter(b => b.status === 'reading').length;
+    const readingValue = booksTotal ? Math.round(booksDone / booksTotal * 100) : 0;
 
     // Compute weekly time distribution from actual data
     const now = new Date();
@@ -1854,7 +1864,7 @@ const UI = {
         ${this.renderProfileRing(contentValue, 'var(--c-personal)', '内容', `${completedTasks}/${totalTasks} 完成`)}
         ${this.renderProfileRing(learningValue, 'var(--c-learning)', '学习', `${learningValue}% 进度`)}
         ${this.renderProfileRing(exerciseValue, 'var(--c-exercise)', '运动', `${s.exerciseMinutes}/${exerciseGoal} min`)}
-        ${this.renderProfileRing(travelValue, 'var(--c-reading)', '旅行', '待记录')}
+        ${this.renderProfileRing(readingValue, 'var(--c-reading)', '阅读', booksTotal ? `已读 ${booksDone} / 在读 ${booksReading}` : '去添加书单')}
       </div>
 
       <div class="stats-grid">
@@ -1964,7 +1974,7 @@ const UI = {
     if (!data.inTop3) data.top3Order = 0;
     if (isNew) {
       data.id = 't' + Date.now();
-      data.createdAt = new Date().toISOString().slice(0, 10);
+      data.createdAt = localDate();
       DB.data.tasks.unshift(data);
     } else {
       const idx = DB.data.tasks.findIndex(t => t.id === data.id);
@@ -2091,7 +2101,7 @@ const UI = {
     const last = new Date(DB.data.period.lastStart);
     const next = new Date(last);
     next.setDate(next.getDate() + DB.data.period.cycleLength);
-    DB.data.period.nextPredict = next.toISOString().slice(0, 10);
+    DB.data.period.nextPredict = localDate(next);
     const today = new Date();
     const diff = Math.floor((today - last) / (1000 * 60 * 60 * 24)) + 1;
     DB.data.period.currentDay = Math.max(1, diff);
